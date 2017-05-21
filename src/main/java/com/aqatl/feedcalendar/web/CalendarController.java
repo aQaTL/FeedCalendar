@@ -30,8 +30,8 @@ public class CalendarController {
 			Calendar.printFeed(feed, new PrintStream(baos));
 
 			String printedCalendar = new String(baos.toByteArray(), StandardCharsets.UTF_8);
-			printedCalendar = printedCalendar.replaceAll(" ", "&nbsp");
-			printedCalendar = printedCalendar.replaceAll("(\\r\\n|\\n)", "<br />");
+//			printedCalendar = printedCalendar.replaceAll(" ", "&nbsp;");
+//			printedCalendar = printedCalendar.replaceAll("(\\r\\n|\\n)", "<br />");
 			model.addAttribute("calendar", printedCalendar);
 			return "calendar";
 		} catch (IOException | FeedException e) {
