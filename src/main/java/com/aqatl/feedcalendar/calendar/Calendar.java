@@ -28,6 +28,7 @@ public class Calendar {
 					"java -jar FeedCalendar.jar <feed url>");
 			System.exit(1);
 		}
+		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"));
 		printFeed(createFeed(args[0]), System.out);
 	}
 
