@@ -1,6 +1,8 @@
 package com.aqatl.feedcalendar.calendar;
 
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
@@ -15,6 +17,7 @@ import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Maciej on 2017-05-07.
@@ -37,14 +40,29 @@ public class Calendar {
 	}
 
 	public static void printFeed(SyndFeed feed, PrintStream out) {
-		feed.getEntries().
-				parallelStream().
+		Map<Integer, List<Date>> collect = feed.getEntries().
+				stream().
 				map(SyndEntry::getPublishedDate).
-				collect(Collectors.groupingBy(Date::getMonth)).
-				forEach((month, dates) -> printMonth(dates, out));
+				collect(Collectors.groupingBy(Date::getYear));
+		new TreeSet<>(collect.keySet()).
+				descendingSet().
+				forEach(year ->
+						collect.get(year).
+								stream().
+								collect(Collectors.groupingBy(Date::getMonth)).
+								forEach((month, days) ->
+										printMonth(days, year + 1900, out)));
+
+		//Ascending order
+//		collect.
+//				forEach((year, dates) ->
+//						dates.stream().
+//								collect(Collectors.groupingBy(Date::getMonth)).
+//								forEach((month, days) ->
+//										printMonth(days, 1900 + year, out)));
 	}
 
-	private static void printMonth(List<Date> dates, PrintStream out) {
+	private static void printMonth(List<Date> dates, int year, PrintStream out) {
 		List<Integer> days = dates.stream().map(Date::getDate).collect(Collectors.toList());
 
 		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"));
@@ -74,6 +92,7 @@ public class Calendar {
 		}
 
 		String monthName = Month.of(month + 1).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault(Locale.Category.FORMAT));
+		monthName += " " + year;
 		int spacing = 14 + (monthName.length() / 2);
 		out.printf("%" + spacing + "s\n", monthName);
 
