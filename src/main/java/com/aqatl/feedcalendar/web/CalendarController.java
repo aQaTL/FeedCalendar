@@ -1,7 +1,7 @@
 package com.aqatl.feedcalendar.web;
 
 import com.aqatl.feedcalendar.calendar.Calendar;
-import com.rometools.rome.feed.synd.SyndFeed;
+import com.aqatl.feedcalendar.calendar.Order;
 import com.rometools.rome.io.FeedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,12 +22,13 @@ import java.nio.charset.StandardCharsets;
 public class CalendarController {
 
 	@RequestMapping(value = "/calendar", method = RequestMethod.GET)
-	public String calendar(@RequestParam(name = "url", required = true, defaultValue = "") String feedUrl, Model model) {
-		try {
-			SyndFeed feed = Calendar.createFeed(feedUrl);
-
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			Calendar.printFeed(feed, new PrintStream(baos));
+	public String calendar(
+			@RequestParam(name = "url", defaultValue = "") String url,
+			@RequestParam(name = "order", defaultValue = "descending") String order,
+			Model model) {
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			Calendar calendar = new Calendar(Calendar.createFeed(url));
+			calendar.printFeed(new PrintStream(baos), Enum.valueOf(Order.class, order.toUpperCase()));
 
 			String printedCalendar = new String(baos.toByteArray(), StandardCharsets.UTF_8);
 			model.addAttribute("calendar", printedCalendar);

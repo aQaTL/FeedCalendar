@@ -1,14 +1,12 @@
 package com.aqatl.feedcalendar.calendar;
 
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
@@ -16,13 +14,14 @@ import java.text.DateFormatSymbols;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Maciej on 2017-05-07.
  */
 public class Calendar {
+	private SyndFeed feed;
 
 	public static void main(String[] args) throws IOException, FeedException {
 		if (args.length != 1) {
@@ -30,7 +29,11 @@ public class Calendar {
 					"java -jar FeedCalendar.jar <feed url>");
 			System.exit(1);
 		}
-		printFeed(createFeed(args[0]), System.out);
+		new Calendar(createFeed(args[0])).printFeed(System.out, Order.DESCENDING);
+	}
+
+	public Calendar(SyndFeed feed) {
+		this.feed = feed;
 	}
 
 	public static SyndFeed createFeed(String url) throws IOException, FeedException {
@@ -39,30 +42,23 @@ public class Calendar {
 		return feed;
 	}
 
-	public static void printFeed(SyndFeed feed, PrintStream out) {
-		Map<Integer, List<Date>> collect = feed.getEntries().
+	public void printFeed(PrintStream out, @NotNull Order order) {
+		TreeMap<Integer, List<Date>> years = new TreeMap<>(feed.getEntries().
 				stream().
 				map(SyndEntry::getPublishedDate).
-				collect(Collectors.groupingBy(Date::getYear));
-		new TreeSet<>(collect.keySet()).
-				descendingSet().
-				forEach(year ->
-						collect.get(year).
-								stream().
-								collect(Collectors.groupingBy(Date::getMonth)).
-								forEach((month, days) ->
-										printMonth(days, year + 1900, out)));
+				collect(Collectors.groupingBy(Date::getYear)));
 
-		//Ascending order
-//		collect.
-//				forEach((year, dates) ->
-//						dates.stream().
-//								collect(Collectors.groupingBy(Date::getMonth)).
-//								forEach((month, days) ->
-//										printMonth(days, 1900 + year, out)));
+		BiConsumer<Integer, List<Date>> printer = (year, dates) ->
+				dates.stream().
+						collect(Collectors.groupingBy(Date::getMonth)).
+						forEach((month, days) ->
+								printMonth(days, 1900 + year, out));
+
+		if (order == Order.ASCENDING) years.forEach(printer);
+		else years.descendingMap().forEach(printer);
 	}
 
-	private static void printMonth(List<Date> dates, int year, PrintStream out) {
+	private void printMonth(List<Date> dates, int year, PrintStream out) {
 		List<Integer> days = dates.stream().map(Date::getDate).collect(Collectors.toList());
 
 		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"));
@@ -131,6 +127,10 @@ public class Calendar {
 
 		// printMonth final end of line if necessary
 		if (weekday != firstDayOfWeek) out.println();
+	}
+
+	public void setFeed(SyndFeed feed) {
+		this.feed = feed;
 	}
 }
 
