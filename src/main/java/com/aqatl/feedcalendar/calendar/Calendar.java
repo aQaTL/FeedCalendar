@@ -9,7 +9,6 @@ import com.rometools.rome.io.XmlReader;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormatSymbols;
 import java.time.Month;
@@ -28,7 +27,6 @@ public class Calendar {
 					"java -jar FeedCalendar.jar <feed url>");
 			System.exit(1);
 		}
-		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"));
 		printFeed(createFeed(args[0]), System.out);
 	}
 
@@ -38,7 +36,7 @@ public class Calendar {
 		return feed;
 	}
 
-	public static void printFeed(SyndFeed feed, PrintStream out)	{
+	public static void printFeed(SyndFeed feed, PrintStream out) {
 		feed.getEntries().
 				parallelStream().
 				map(SyndEntry::getPublishedDate).
@@ -48,8 +46,12 @@ public class Calendar {
 
 	private static void printMonth(List<Date> dates, PrintStream out) {
 		List<Integer> days = dates.stream().map(Date::getDate).collect(Collectors.toList());
+
+		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"));
+		Locale.setDefault(Locale.forLanguageTag("pl"));
 		// construct d as current date
 		GregorianCalendar d = new GregorianCalendar();
+		d.setTimeZone(TimeZone.getTimeZone("Europe/Warsaw"));
 		d.setTime(dates.get(0));
 
 		int today = d.get(java.util.Calendar.DAY_OF_MONTH);
