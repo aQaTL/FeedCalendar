@@ -28,7 +28,7 @@ public class CalendarController {
 			Model model) {
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			Calendar calendar = new Calendar(Calendar.createFeed(url));
-			calendar.printFeed(new PrintStream(baos), Enum.valueOf(Order.class, order.toUpperCase()));
+			calendar.printFeed(new PrintStream(baos), Enum.valueOf(Order.class, order.toUpperCase()), true);
 
 			String printedCalendar = new String(baos.toByteArray(), StandardCharsets.UTF_8);
 			model.addAttribute("calendar", printedCalendar);

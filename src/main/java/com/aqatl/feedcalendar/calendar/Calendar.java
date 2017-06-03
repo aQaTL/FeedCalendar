@@ -16,6 +16,7 @@ import java.time.format.TextStyle;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @author Maciej on 2017-05-07.
@@ -29,7 +30,7 @@ public class Calendar {
 					"java -jar FeedCalendar.jar <feed url>");
 			System.exit(1);
 		}
-		new Calendar(createFeed(args[0])).printFeed(System.out, Order.DESCENDING);
+		new Calendar(createFeed(args[0])).printFeed(System.out, Order.DESCENDING, false);
 	}
 
 	public Calendar(SyndFeed feed) {
@@ -42,7 +43,7 @@ public class Calendar {
 		return feed;
 	}
 
-	public void printFeed(PrintStream out, @NotNull Order order) {
+	public void printFeed(PrintStream out, @NotNull Order order, boolean html) {
 		TreeMap<Integer, List<Date>> years = new TreeMap<>(feed.getEntries().
 				stream().
 				map(SyndEntry::getPublishedDate).
@@ -52,13 +53,13 @@ public class Calendar {
 				dates.stream().
 						collect(Collectors.groupingBy(Date::getMonth)).
 						forEach((month, days) ->
-								printMonth(days, 1900 + year, out));
+								printMonth(days, 1900 + year, out, html));
 
 		if (order == Order.ASCENDING) years.forEach(printer);
 		else years.descendingMap().forEach(printer);
 	}
 
-	private void printMonth(List<Date> dates, int year, PrintStream out) {
+	private void printMonth(List<Date> dates, int year, PrintStream out, boolean html) {
 		List<Integer> days = dates.stream().map(Date::getDate).collect(Collectors.toList());
 
 		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Warsaw"));
@@ -112,8 +113,13 @@ public class Calendar {
 			out.printf("%3d", day);
 
 			// mark current day with *
-			if (days.contains(day)) out.print("*");
-			else out.print(" ");
+			long postCount = days.stream().filter(date -> date == day).count();
+			if (postCount > 0) {
+				if (html) out.printf("<sup>%d</sup>", postCount);
+				else out.print("*");
+			} else {
+				out.print(" ");
+			}
 
 			// advance d to the next day
 			d.add(java.util.Calendar.DAY_OF_MONTH, 1);
