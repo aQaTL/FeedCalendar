@@ -1,14 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Feed Calendar</title>
+    <link rel="stylesheet" href="style.css">
+
+    <title>FeedCalendar</title>
 </head>
 <body>
-    <form action="/calendar">
-        <input type="text" name="url" size="40" placeholder="Paste feed url here"/>
-        <input type="submit" value="Parse"/>
-        <input type="checkbox" name="order" value="ascending">Reverse order
-    </form>
+<div class="outer">
+    <div class="middle">
+        <div class="inputForm">
+            <form action="/calendar">
+                <input type="text" name="url" size="20%" placeholder="Paste your URL here" onFocus="this.placeholder=''"
+                       onblur="this.placeholder='Paste your URL here'"/>
+                <div class="squaredCheckbox">
+                    <input type="checkbox" id="squaredCheckbox" name="order" value="ascending"/>
+                    <label for="squaredCheckbox"></label>
+                    <span>Reversed years order</span>
+                </div>
+                <input class="" type="submit" value="Parse"/>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

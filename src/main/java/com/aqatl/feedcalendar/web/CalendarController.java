@@ -1,7 +1,7 @@
 package com.aqatl.feedcalendar.web;
 
-import com.aqatl.feedcalendar.calendar.Calendar;
-import com.aqatl.feedcalendar.calendar.Order;
+import com.aqatl.feedcalendar.legacycalendar.Calendar;
+import com.aqatl.feedcalendar.legacycalendar.Order;
 import com.rometools.rome.io.FeedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

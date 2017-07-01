@@ -1,4 +1,4 @@
-package com.aqatl.feedcalendar.calendar;
+package com.aqatl.feedcalendar.legacycalendar;
 
 /**
  * @author Maciej on 2017-05-21.

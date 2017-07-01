@@ -1,4 +1,4 @@
-package com.aqatl.feedcalendar.calendar;
+package com.aqatl.feedcalendar.legacycalendar;
 
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
@@ -16,7 +16,6 @@ import java.time.format.TextStyle;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * @author Maciej on 2017-05-07.
