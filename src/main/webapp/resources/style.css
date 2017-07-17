@@ -68,7 +68,6 @@ input[type=submit]:hover {
     border: 3px solid #ff8000;
 }
 
-
 .header {
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -100,6 +99,7 @@ input[type=submit]:hover {
     border-radius: 4px;
     box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.4);
 }
+
 .squaredCheckbox label:after {
     content: '';
     width: 9px;
@@ -115,12 +115,15 @@ input[type=submit]:hover {
     -webkit-transform: rotate(-45deg);
     transform: rotate(-45deg);
 }
+
 .squaredCheckbox label:hover::after {
     opacity: 0.3;
 }
+
 .squaredCheckbox input[type=checkbox] {
     visibility: hidden;
 }
+
 .squaredCheckbox input[type=checkbox]:checked + label:after {
     opacity: 1;
 }
@@ -137,3 +140,8 @@ input[type=submit]:hover {
 
 }
 
+#jslogo {
+    position: fixed;
+    bottom: -4px;
+    right: 0;
+}

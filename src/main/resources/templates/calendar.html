@@ -1,10 +1,21 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Feed Calendar</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="UTF-8" />
+    <title>FeedCalendar</title>
 </head>
 <body>
-<span th:utext="${calendar}" style="white-space: pre; font-family: monospace" />
+<div class="year" th:each="year : ${years}">
+    <div class="month" th:each="month : ${year.months}">
+        <table>
+            <tr>
+                <td th:each="weekday : ${weekdays}" th:text="${weekday}"></td>
+            </tr>
+            <tr th:each="week : ${month.weeks}">
+                <td th:each="day : ${week.days}"  th:text="${day}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
 </body>
 </html>

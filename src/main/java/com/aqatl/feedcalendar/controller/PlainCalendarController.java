@@ -1,4 +1,4 @@
-package com.aqatl.feedcalendar.web;
+package com.aqatl.feedcalendar.controller;
 
 import com.aqatl.feedcalendar.legacycalendar.Calendar;
 import com.aqatl.feedcalendar.legacycalendar.Order;
@@ -12,19 +12,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
  * @author Maciej on 2017-05-20.
  */
 @Controller
-@RequestMapping("/")
-public class CalendarController {
+@RequestMapping("/old")
+public class PlainCalendarController {
 
-	@RequestMapping(value = "/calendar", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
+	public String oldCalendar() {
+		return "old";
+	}
+
+	@RequestMapping(method = RequestMethod.POST)
 	public String calendar(
-			@RequestParam(name = "url", defaultValue = "") String url,
-			@RequestParam(name = "order", defaultValue = "descending") String order,
+			@RequestParam(value = "url", defaultValue = "") String url,
+			@RequestParam(value = "order", defaultValue = "descending") String order,
 			Model model) {
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			Calendar calendar = new Calendar(Calendar.createFeed(url));
@@ -32,7 +38,7 @@ public class CalendarController {
 
 			String printedCalendar = new String(baos.toByteArray(), StandardCharsets.UTF_8);
 			model.addAttribute("calendar", printedCalendar);
-			return "calendar";
+			return "plain_calendar";
 		} catch (IOException | FeedException e) {
 			return "Error: " + e.getMessage();
 		}
