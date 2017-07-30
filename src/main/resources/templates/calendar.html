@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>FeedCalendar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="year" th:each="year : ${years}">
-    <div class="month" th:each="month : ${year.months}">
-        <table>
+<div class="year container-fluid" th:each="year : ${years}">
+    <div class="month table-responsive" th:each="month : ${year}">
+        <table class="table table-bordered">
             <tr>
-                <td th:each="weekday : ${weekdays}" th:text="${weekday}"></td>
+                <td class="active" th:each="weekday : ${weekdays}" th:text="${weekday}"></td>
             </tr>
-            <tr th:each="week : ${month.weeks}">
-                <td th:each="day : ${week.days}"  th:text="${day}"></td>
+            <tr th:each="week : ${month}">
+                <td th:each="day : ${week}" th:text="${day} == 0 ? '' : ${day}" th:if="${not thymeleafUtils.isArrayEmpty(week)}"></td>
             </tr>
         </table>
     </div>
